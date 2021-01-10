@@ -1,8 +1,11 @@
 import 'dart:io';
 
+import 'package:checksum_calculator/ui/ModalMultiFilesResult.dart';
+import 'package:checksum_calculator/ui/ModalSingleFileResult.dart';
 import 'package:checksum_calculator/utils/checksum.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:path/path.dart';
 
 void main() {
   runApp(MyApp());
@@ -13,13 +16,13 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Checksum Calculator',
       theme: ThemeData(
         primarySwatch: Colors.indigo,
         backgroundColor: Colors.white,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: HomePage(title: 'Flutter Demo Home Page'),
+      home: HomePage(title: 'Checksum Calculator'),
     );
   }
 }
@@ -51,22 +54,73 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+            Spacer(flex: 10),
             RaisedButton(
               color: Theme.of(context).primaryColor,
-              child: Text(
-                'Browse for single file',
-                style: TextStyle(
-                  color: Theme.of(context).backgroundColor
+              child: Padding(
+                padding: const EdgeInsets.all(10),
+                child: Text(
+                  'Browse for single file',
+                  style: TextStyle(
+                    color: Theme.of(context).backgroundColor,
+                    fontSize: 30
+                  ),
                 ),
               ),
               onPressed: () async {
                 FilePickerResult result = await FilePicker.platform.pickFiles();
-                calculateChecksumForFile(File(result.files.single.path));
+                if(result != null) {
+                  num checksum = await calculateChecksumForFile(File(result.files.single.path));
+                  _showModalSingleFileResult(context, result.files.single.name, checksum);
+                }
               },
-            )
+            ),
+            Spacer(flex: 1),
+            RaisedButton(
+              color: Theme.of(context).primaryColor,
+              child: Padding(
+                padding: const EdgeInsets.all(10),
+                child: Text(
+                  'Browse for multiple files',
+                  style: TextStyle(
+                      color: Theme.of(context).backgroundColor,
+                      fontSize: 30
+                  ),
+                ),
+              ),
+              onPressed: () async {
+                FilePickerResult result = await FilePicker.platform.pickFiles(allowMultiple: true);
+                if(result != null) {
+                  List<File> files = result.paths.map((path) => File(path)).toList();
+                  Map<File, num> checksumMap = await calculateChecksumForFileList(files);
+                  Map<String, num> filenameChecksumMap = Map();
+                  checksumMap.forEach((key, value) {
+                    filenameChecksumMap.putIfAbsent(basename(key.path), () => value);
+                  });
+                  _showModalMultiFilesResult(context, filenameChecksumMap);
+                }
+              },
+            ),
+            Spacer(flex: 10)
           ],
         ),
       ),
     );
+  }
+
+  _showModalSingleFileResult(BuildContext context, String filename, num checksum) {
+    showDialog(
+        context: context,
+        builder: (builder) {
+          return ModalSingleFileResult(context, filename, checksum);
+        });
+  }
+
+  _showModalMultiFilesResult(BuildContext context, Map<String, num> map) {
+    showDialog(
+        context: context,
+        builder: (builder) {
+          return ModalMultiFilesResult(context, map);
+        });
   }
 }
