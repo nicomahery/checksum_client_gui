@@ -93,113 +93,120 @@ class _ModalMultiFilesResultState extends State<ModalMultiFilesResult> {
                 decoration: BoxDecoration(
                   color: Colors.white,
                 ),
-                child: ListView.separated(
-                  padding: const EdgeInsets.all(25),
-                  itemCount: this.widget.fileChecksumMap.length,
-                  separatorBuilder: (BuildContext context, int index) => const Divider(),
-                  scrollDirection: Axis.horizontal,
-                  itemBuilder: (BuildContext context, int index) {
-                    String filename = this.widget.fileChecksumMap.keys.elementAt(index);
-                    num checksum = this.widget.fileChecksumMap[filename];
-                    String formattedString = '\'$filename\': $checksum,';
-                    return Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Spacer(flex: 5),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Column(
-                              children: [
-                                Text(
-                                  filename,
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.w600),
-                                ),
-                              ],
-                            ),
-                            Column(
-                              children: [
-                                IconButton(
-                                  icon: Icon(Icons.content_copy),
-                                  onPressed: () {
-                                    setState(() {
-                                      Clipboard.setData(ClipboardData(text: filename));
-                                    });
-                                  },
-                                )
-                              ],
-                            )
-                          ],
-                        ),
-                        Spacer(flex: 1),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Column(
-                              children: [
-                                Text(
-                                  checksum.toString(),
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.w600),
-                                ),
-                              ],
-                            ),
-                            Column(
-                              children: [
-                                IconButton(
-                                  icon: Icon(Icons.content_copy),
-                                  onPressed: () {
-                                    setState(() {
-                                      Clipboard.setData(ClipboardData(text: checksum.toString()));
-                                    });
-                                  },
-                                )
-                              ],
-                            )
-                          ],
-                        ),
-                        Spacer(flex: 1),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Column(
-                              children: [
-                                Text(
-                                  formattedString,
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.w600),
-                                ),
-                              ],
-                            ),
-                            Column(
-                              children: [
-                                IconButton(
-                                  icon: Icon(Icons.content_copy),
-                                  onPressed: () {
-                                    setState(() {
-                                      Clipboard.setData(ClipboardData(text: formattedString));
-                                    });
-                                  },
-                                )
-                              ],
-                            )
-                          ],
-                        ),
-                        Spacer(flex: 5),
-                      ],
-                    );
-                  }
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: () {
+                      List<Widget> rows = [];
+                      this.widget.fileChecksumMap.forEach((key, value) {
+                        String filename = key;
+                        num checksum = value;
+                        String formattedString = '\'$filename\': $checksum,';
+                        print('formattedString: $formattedString');
+                        rows.add(
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Spacer(flex: 20),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Column(
+                                    children: [
+                                      Text(
+                                        filename,
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w600),
+                                      ),
+                                    ],
+                                  ),
+                                  Column(
+                                    children: [
+                                      IconButton(
+                                        icon: Icon(Icons.content_copy),
+                                        onPressed: () {
+                                          setState(() {
+                                            Clipboard.setData(ClipboardData(text: filename));
+                                          });
+                                        },
+                                      )
+                                    ],
+                                  )
+                                ],
+                              ),
+                              Spacer(flex: 1),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Column(
+                                    children: [
+                                      Text(
+                                        checksum.toString(),
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w600),
+                                      ),
+                                    ],
+                                  ),
+                                  Column(
+                                    children: [
+                                      IconButton(
+                                        icon: Icon(Icons.content_copy),
+                                        onPressed: () {
+                                          setState(() {
+                                            Clipboard.setData(ClipboardData(text: checksum.toString()));
+                                          });
+                                        },
+                                      )
+                                    ],
+                                  )
+                                ],
+                              ),
+                              Spacer(flex: 1),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Column(
+                                    children: [
+                                      Text(
+                                        formattedString,
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w600),
+                                      ),
+                                    ],
+                                  ),
+                                  Column(
+                                    children: [
+                                      IconButton(
+                                        icon: Icon(Icons.content_copy),
+                                        onPressed: () {
+                                          setState(() {
+                                            Clipboard.setData(ClipboardData(text: formattedString));
+                                          });
+                                        },
+                                      )
+                                    ],
+                                  )
+                                ],
+                              ),
+                              Spacer(flex: 20),
+                            ],
+                          )
+                        );
+                      });
+                      return rows;
+                    }()
+                  ),
                 ),
               ),
             ),
