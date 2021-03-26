@@ -58,16 +58,29 @@ class _ModalMultiFilesResultState extends State<ModalMultiFilesResult> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  Align(
-                    //alignment: Alignment.center,
-                    child: Text(
-                      "Results",
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 20,
-                          fontWeight: FontWeight.w600),
-                    ),
+                  Spacer(),
+                  Text(
+                    "Results",
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.w600),
                   ),
+                  Spacer(),
+                  IconButton(
+                    icon: Icon(
+                      Icons.copy,
+                      color: Colors.white,
+                      size: 15,
+                    ),
+                    onPressed: () {
+                      String dataToCopy = '';
+                      this.widget.fileChecksumMap.forEach((key, value) {
+                        dataToCopy +=  '\'$key\': $value,\n';
+                      });
+                      Clipboard.setData(ClipboardData(text: dataToCopy));
+                    },
+                  )
                 ],
               ),
             ),
@@ -84,6 +97,7 @@ class _ModalMultiFilesResultState extends State<ModalMultiFilesResult> {
                   padding: const EdgeInsets.all(25),
                   itemCount: this.widget.fileChecksumMap.length,
                   separatorBuilder: (BuildContext context, int index) => const Divider(),
+                  scrollDirection: Axis.horizontal,
                   itemBuilder: (BuildContext context, int index) {
                     String filename = this.widget.fileChecksumMap.keys.elementAt(index);
                     num checksum = this.widget.fileChecksumMap[filename];

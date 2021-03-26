@@ -56,8 +56,10 @@ class _HomePageState extends State<HomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Spacer(flex: 10),
-            RaisedButton(
-              color: Theme.of(context).primaryColor,
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                  primary: Theme.of(context).primaryColor
+              ),
               child: Padding(
                 padding: const EdgeInsets.all(10),
                 child: Text(
@@ -77,8 +79,10 @@ class _HomePageState extends State<HomePage> {
               },
             ),
             Spacer(flex: 1),
-            RaisedButton(
-              color: Theme.of(context).primaryColor,
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                  primary: Theme.of(context).primaryColor
+              ),
               child: Padding(
                 padding: const EdgeInsets.all(10),
                 child: Text(
@@ -92,6 +96,7 @@ class _HomePageState extends State<HomePage> {
               onPressed: () async {
                 FilePickerResult result = await FilePicker.platform.pickFiles(allowMultiple: true);
                 if(result != null) {
+                  print(result.names);
                   List<File> files = result.paths.map((path) => File(path)).toList();
                   Map<File, num> checksumMap = await calculateChecksumForFileList(files);
                   Map<String, num> filenameChecksumMap = Map();
